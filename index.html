@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+
+    <div class="navbar">
+    <h2>💰 Expense Tracker</h2>
+
+    <div class="nav-right">
+
+        <a href="/profile" class="profile-btn">
+            👤 Profile
+        </a>
+
+        <a href="/logout" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+    <div class="welcome">
+        <h2>Welcome Back, {{ username }} 👋</h2>
+        <p>Track your income, expenses and financial growth.</p>
+    </div>
+
+    <div class="top">
+        <div class="card balance">
+            <h2>💰 Total Balance</h2>
+            <h1>₹ {{ balance }}</h1>
+        </div>
+        <div class="card income">
+            <h2>📈 Total Income</h2>
+            <h1>₹ {{ total_income }}</h1>
+        </div>
+        <div class="card expense">
+            <h2>📉 Total Expense</h2>
+            <h1>₹ {{ total_expense }}</h1>
+        </div>
+    </div>
+
+    <div class="form-box">
+        <form action="/add" method="POST">
+            <input type="text" name="title" placeholder="Title" required>
+            <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+            <select name="category" required>
+                <option value="Food">Food</option>
+                <option value="Travel">Travel</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Bills">Bills</option>
+                <option value="Salary">Salary</option>
+                <option value="Other">Other</option>
+            </select>
+            <select name="type" required>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+            </select>
+            <button type="submit">Add Transaction</button>
+        </form>
+    </div>
+<a href="/download_pdf" class="pdf-btn">
+    📄 Download PDF Report
+</a>
+
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for item in expenses %}
+        <tr>
+            <td>{{ item[2] }}</td>
+            <td>₹ {{ item[3] }}</td>
+            <td>{{ item[4] }}</td>
+            <td>{{ item[5] }}</td>
+            <td>{{ item[6] }}</td>
+            <td>
+                <a href="/edit/{{ item[0] }}" style="color:#3b82f6;">Edit</a>
+                |
+                <a href="/delete/{{ item[0] }}" onclick="return confirm('Delete this transaction?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="monthly-summary">
+
+    <h2>📅 Monthly Summary</h2>
+
+    <div class="summary-row">
+        <span>💰 Income</span>
+        <span>₹ {{ total_income }}</span>
+    </div>
+
+    <div class="summary-row">
+        <span>📉 Expense</span>
+        <span>₹ {{ total_expense }}</span>
+    </div>
+
+    <div class="summary-row">
+        <span>🏦 Net Savings</span>
+        <span>₹ {{ balance }}</span>
+    </div>
+
+</div>
+<div class="top-spending-card">
+
+    <h2>🔥 Top Spending Category</h2>
+
+    <h1>{{ top_category }}</h1>
+
+    <p>₹ {{ top_amount }} Spent</p>
+
+</div>
+<div class="recent-card">
+
+    <h2>📜 Recent Transactions</h2>
+
+    {% for item in expenses[:5] %}
+
+    <div class="recent-row">
+
+        <span>{{ item[2] }}</span>
+
+        <span>₹ {{ item[3] }}</span>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+    {% if categories %}
+    <div class="chart-box">
+        <h3 style="text-align:center; margin-bottom:15px;">📊 Expense by Category</h3>
+        <canvas id="expenseChart"></canvas>
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+{% if categories %}
+const ctx = document.getElementById('expenseChart');
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: {{ categories|tojson }},
+        datasets: [{
+            data: {{ values|tojson }},
+            backgroundColor: ['#3b82f6','#22c55e','#ef4444','#f59e0b','#8b5cf6','#06b6d4']
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { labels: { color: 'white' } }
+        }
+    }
+});
+{% endif %}
+<div class="chart-box">
+    <h3 style="text-align:center; margin-bottom:15px;">
+        📈 Monthly Expense Trend
+    </h3>
+
+    <canvas id="monthlyChart"></canvas>
+</div>
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+window.onload = function() {
+
+    const canvas = document.getElementById('expenseChart');
+
+    if (!canvas) {
+        return;
+    }
+
+    new Chart(canvas, {
+        type: 'pie',
+        data: {
+            labels: {{ categories|tojson }},
+            datasets: [{
+                data: {{ values|tojson }},
+                backgroundColor: [
+                    '#3b82f6',
+                    '#22c55e',
+                    '#ef4444',
+                    '#f59e0b',
+                    '#8b5cf6',
+                    '#06b6d4',
+                    '#ec4899',
+                    '#14b8a6'
+                ]
+            }]
+        }
+    });
+
+};
+</script>
+</script>
+</body>
+</html>
