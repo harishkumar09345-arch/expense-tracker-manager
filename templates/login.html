@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:linear-gradient(135deg,#0f172a,#1e293b); color:white; }
+    .login-box{ width:420px; padding:35px; background:rgba(255,255,255,0.08); backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.1); border-radius:25px; box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+    .logo{ text-align:center; margin-bottom:10px; font-size:50px; }
+    h1{ text-align:center; margin-bottom:10px; font-weight:600; }
+    .subtitle{ text-align:center; color:#cbd5e1; margin-bottom:30px; font-size:14px; }
+    input{ width:100%; padding:15px; margin-bottom:15px; border:none; outline:none; border-radius:12px; background:rgba(255,255,255,0.1); color:white; font-size:15px; }
+    input::placeholder{ color:#d1d5db; }
+    button{ width:100%; padding:15px; border:none; border-radius:12px; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; font-size:16px; font-weight:500; cursor:pointer; transition:0.3s; }
+    button:hover{ transform:translateY(-2px); }
+    .error{ background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#fca5a5; padding:12px; border-radius:10px; margin-bottom:15px; text-align:center; font-size:14px; }
+    .footer{ text-align:center; margin-top:20px; color:#94a3b8; font-size:14px; }
+    .footer a{ color:#22c55e; text-decoration:none; font-weight:600; font-size:15px; }
+    .footer a:hover{ text-decoration:underline; }
+    .register-btn{ display:block; width:100%; padding:15px; margin-top:12px; border:2px solid #22c55e; border-radius:12px; background:transparent; color:#22c55e; font-size:16px; font-weight:500; cursor:pointer; transition:0.3s; text-align:center; text-decoration:none; }
+    .register-btn:hover{ background:#22c55e; color:white; transform:translateY(-2px); }
+    .divider{ text-align:center; color:#475569; margin:15px 0; font-size:13px; }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <div class="logo">💰</div>
+    <h1>Expense Tracker</h1>
+    <p class="subtitle">Manage your income and expenses</p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="Enter Username" required>
+        <input type="password" name="password" placeholder="Enter Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="divider">— OR —</div>
+
+    <a href="/register" class="register-btn">✏️ Create New Account</a>
+
+    <div class="footer">
+        New here? Register to get started!
+    </div>
+</div>
+</body>
+</html>
